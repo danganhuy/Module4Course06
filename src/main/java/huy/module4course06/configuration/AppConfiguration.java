@@ -101,7 +101,6 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         return transactionManager;
     }
 
-    @Bean
     public Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");

@@ -3,10 +3,7 @@ package huy.module4course06.repository;
 import huy.module4course06.model.Customer;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -38,8 +35,18 @@ public class CustomerRepository implements ICustomerRepository {
         if (customer.getId() != null) {
             entityManager.merge(customer);
         } else {
-            entityManager.persist(customer);
+//            entityManager.persist(customer);
+            saveWithStoreProcedure(customer);
         }
+    }
+
+    public void saveWithStoreProcedure(Customer customer) {
+        String sql = "CALL Insert_customer(:name,:email,:address)";
+        Query query = entityManager.createNativeQuery(sql);
+        query.setParameter("name", customer.getName());
+        query.setParameter("email", customer.getEmail());
+        query.setParameter("address", customer.getAddress());
+        query.executeUpdate();
     }
 
     @Override
